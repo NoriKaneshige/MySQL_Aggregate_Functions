@@ -483,3 +483,45 @@ mysql> SELECT
 +----------------------+--------------+
 12 rows in set (0.02 sec)
 ```
+## SUM
+```
+mysql> SELECT SUM(pages)
+    -> FROM books;
++------------+
+| SUM(pages) |
++------------+
+|       6623 |
++------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT author_fname,
+    ->        author_lname,
+    ->        Sum(pages)
+    -> FROM books
+    -> GROUP BY
+    ->     author_lname,
+    ->     author_fname;
++--------------+----------------+------------+
+| author_fname | author_lname   | Sum(pages) |
++--------------+----------------+------------+
+| Raymond      | Carver         |        702 |
+| Michael      | Chabon         |        634 |
+| Don          | DeLillo        |        320 |
+| Dave         | Eggers         |       1293 |
+| David        | Foster Wallace |        672 |
+| Neil         | Gaiman         |        977 |
+| Dan          | Harris         |        256 |
+| Freida       | Harris         |        428 |
+| Jhumpa       | Lahiri         |        489 |
+| George       | Saunders       |        367 |
+| Patti        | Smith          |        304 |
+| John         | Steinbeck      |        181 |
++--------------+----------------+------------+
+12 rows in set (0.02 sec)
+```
+## AVERAGE
+```
+
+
+```
+
