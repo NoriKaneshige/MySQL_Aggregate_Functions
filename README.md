@@ -91,6 +91,8 @@ mysql> SELECT COUNT(*) FROM books WHERE title LIKE '%the%';
 ```
 
 ## GROUP BY
+![group_by_1](https://github.com/NoriKaneshige/MySQL_Aggregate_Functions/blob/master/group_by_1.png)
+![group_by_2](https://github.com/NoriKaneshige/MySQL_Aggregate_Functions/blob/master/group_by_2.png)
 ```
 
 ```
