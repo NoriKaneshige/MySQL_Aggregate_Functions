@@ -521,7 +521,183 @@ mysql> SELECT author_fname,
 ```
 ## AVERAGE
 ```
+mysql> SELECT AVG(pages)
+    -> FROM books;
++------------+
+| AVG(pages) |
++------------+
+|   348.5789 |
++------------+
+1 row in set (0.00 sec)
 
+mysql> SELECT released_year, AVG(stock_quantity)
+    -> FROM books
+    -> GROUP BY released_year;
++---------------+---------------------+
+| released_year | AVG(stock_quantity) |
++---------------+---------------------+
+|          1945 |             95.0000 |
+|          1981 |             23.0000 |
+|          1985 |             49.0000 |
+|          1989 |             12.0000 |
+|          1996 |             97.0000 |
+|          2000 |             68.0000 |
+|          2001 |            134.3333 |
+|          2003 |             66.0000 |
+|          2004 |            172.0000 |
+|          2005 |             92.0000 |
+|          2010 |             55.0000 |
+|          2012 |            154.0000 |
+|          2013 |             26.0000 |
+|          2014 |             29.0000 |
+|          2016 |             43.0000 |
+|          2017 |           1000.0000 |
++---------------+---------------------+
+16 rows in set (0.00 sec)
 
+mysql> SELECT author_fname, author_lname, AVG(pages) FROM books
+    -> GROUP BY author_lname, author_fname;
++--------------+----------------+------------+
+| author_fname | author_lname   | AVG(pages) |
++--------------+----------------+------------+
+| Raymond      | Carver         |   351.0000 |
+| Michael      | Chabon         |   634.0000 |
+| Don          | DeLillo        |   320.0000 |
+| Dave         | Eggers         |   431.0000 |
+| David        | Foster Wallace |   336.0000 |
+| Neil         | Gaiman         |   325.6667 |
+| Dan          | Harris         |   256.0000 |
+| Freida       | Harris         |   428.0000 |
+| Jhumpa       | Lahiri         |   244.5000 |
+| George       | Saunders       |   367.0000 |
+| Patti        | Smith          |   304.0000 |
+| John         | Steinbeck      |   181.0000 |
++--------------+----------------+------------+
+12 rows in set (0.01 sec)
+```
+## Aggregate Function Challenge
+```
+mysql> SELECT COUNT(*) FROM books;
++----------+
+| COUNT(*) |
++----------+
+|       19 |
++----------+
+1 row in set (0.00 sec)
+
+mysql> SELECT released_year, COUNT(*) FROM books GROUP BY released_year;
++---------------+----------+
+| released_year | COUNT(*) |
++---------------+----------+
+|          1945 |        1 |
+|          1981 |        1 |
+|          1985 |        1 |
+|          1989 |        1 |
+|          1996 |        1 |
+|          2000 |        1 |
+|          2001 |        3 |
+|          2003 |        2 |
+|          2004 |        1 |
+|          2005 |        1 |
+|          2010 |        1 |
+|          2012 |        1 |
+|          2013 |        1 |
+|          2014 |        1 |
+|          2016 |        1 |
+|          2017 |        1 |
++---------------+----------+
+16 rows in set (0.00 sec)
+
+mysql> SELECT author_fname, author_lname, AVG(released_year) FROM books GROUP BY author_lname, author_fname;
+
++--------------+----------------+--------------------+
+| author_fname | author_lname   | AVG(released_year) |
++--------------+----------------+--------------------+
+| Raymond      | Carver         |          1985.0000 |
+| Michael      | Chabon         |          2000.0000 |
+| Don          | DeLillo        |          1985.0000 |
+| Dave         | Eggers         |          2008.6667 |
+| David        | Foster Wallace |          2004.5000 |
+| Neil         | Gaiman         |          2006.6667 |
+| Dan          | Harris         |          2014.0000 |
+| Freida       | Harris         |          2001.0000 |
+| Jhumpa       | Lahiri         |          1999.5000 |
+| George       | Saunders       |          2017.0000 |
+| Patti        | Smith          |          2010.0000 |
+| John         | Steinbeck      |          1945.0000 |
++--------------+----------------+--------------------+
+12 rows in set (0.00 sec)
+
+mysql> SELECT CONCAT(author_fname, ' ', author_lname) FROM books
+    -> WHERE pages = (SELECT Max(pages) FROM books);
++-----------------------------------------+
+| CONCAT(author_fname, ' ', author_lname) |
++-----------------------------------------+
+| Michael Chabon                          |
++-----------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT CONCAT(author_fname, ' ', author_lname) FROM books
+    -> ORDER BY pages DESC LIMIT 1;
++-----------------------------------------+
+| CONCAT(author_fname, ' ', author_lname) |
++-----------------------------------------+
+| Michael Chabon                          |
++-----------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT pages, CONCAT(author_fname, ' ', author_lname) FROM books
+    -> ORDER BY pages DESC;
++-------+-----------------------------------------+
+| pages | CONCAT(author_fname, ' ', author_lname) |
++-------+-----------------------------------------+
+|   634 | Michael Chabon                          |
+|   526 | Raymond Carver                          |
+|   504 | Dave Eggers                             |
+|   465 | Neil Gaiman                             |
+|   437 | Dave Eggers                             |
+|   428 | Freida Harris                           |
+|   367 | George Saunders                         |
+|   352 | Dave Eggers                             |
+|   343 | David Foster Wallace                    |
+|   329 | David Foster Wallace                    |
+|   320 | Don DeLillo                             |
+|   304 | Neil Gaiman                             |
+|   304 | Patti Smith                             |
+|   291 | Jhumpa Lahiri                           |
+|   256 | Dan Harris                              |
+|   208 | Neil Gaiman                             |
+|   198 | Jhumpa Lahiri                           |
+|   181 | John Steinbeck                          |
+|   176 | Raymond Carver                          |
++-------+-----------------------------------------+
+19 rows in set (0.00 sec)
+
+mysql> SELECT released_year AS year,
+    ->     COUNT(*) AS '# of books',
+    ->     AVG(pages) AS 'avg pages'
+    -> FROM books
+    ->     GROUP BY released_year;
++------+------------+-----------+
+| year | # of books | avg pages |
++------+------------+-----------+
+| 1945 |          1 |  181.0000 |
+| 1981 |          1 |  176.0000 |
+| 1985 |          1 |  320.0000 |
+| 1989 |          1 |  526.0000 |
+| 1996 |          1 |  198.0000 |
+| 2000 |          1 |  634.0000 |
+| 2001 |          3 |  443.3333 |
+| 2003 |          2 |  249.5000 |
+| 2004 |          1 |  329.0000 |
+| 2005 |          1 |  343.0000 |
+| 2010 |          1 |  304.0000 |
+| 2012 |          1 |  352.0000 |
+| 2013 |          1 |  504.0000 |
+| 2014 |          1 |  256.0000 |
+| 2016 |          1 |  304.0000 |
+| 2017 |          1 |  367.0000 |
++------+------------+-----------+
+16 rows in set (0.00 sec)
 ```
 
